@@ -68,7 +68,7 @@ while True:
 
     rgb_img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
 
-    
+    view = pygame.surfarray.array3d(screen)
 
     results = hands.process(rgb_img)
     # print(results.multi_hand_landmarks)
@@ -81,20 +81,22 @@ while True:
 
             for id, lm in enumerate(hand_lm.landmark):
 
-                height, width, channels = img.shape
-                centre_x, centre_y = int(lm.x * width), int(lm.y * height)
+                centre_x, centre_y = int(lm.x * screen_width), int(lm.y * screen_height)
 
-                print(id, ':', centre_x, centre_y)
+                # print(id, ':', centre_x, centre_y)
 
                 cv.circle(img, (centre_x, centre_y), 25, (255, 0, 255))
 
-            mp_draw.draw_landmarks(img, hand_lm, mp_hands.HAND_CONNECTIONS)
+            mp_draw.draw_landmarks(view, hand_lm, mp_hands.HAND_CONNECTIONS)
+            index_finger = hand_lm.landmark[8]
+            player.y = index_finger.y * screen_height
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == pygame.KEYDOWN:
+        """if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 player_speed -= 7
             if event.key == pygame.K_DOWN:
@@ -103,7 +105,7 @@ while True:
             if event.key == pygame.K_UP:
                 player_speed += 7
             if event.key == pygame.K_DOWN:
-                player_speed -= 7
+                player_speed -= 7"""
 
     # Game Logic
 
@@ -123,13 +125,14 @@ while True:
     player_animation()
 
     # Visuals
-    # screen.fill(bg_color)
+    screen.fill(bg_color)
     pygame.draw.rect(screen, light_grey, player)
     pygame.draw.rect(screen, light_grey, opponent)
     pygame.draw.ellipse(screen, light_grey, ball)
     pygame.draw.aaline(screen, light_grey, (screen_width / 2, 0),(screen_width / 2, screen_height))
 
     #convert image so it can be displayed in OpenCV
+    #view = pygame.surfarray.array3d(screen)
 
     #  convert from (width, height, channel) to (height, width, channel)
     view = view.transpose([1, 0, 2])
@@ -139,22 +142,3 @@ while True:
 
     #Display image, clear cell every 0.5 seconds
     cv.imshow("Pong!", img_bgr)
-
-
-    curr_time = time.time()
-    fps = 1/(curr_time - prev_time)
-    prev_time = curr_time
-
-    cv.putText(
-        img,
-        text = str(int(fps)),
-        org = (10, 70),
-        fontFace = cv.FONT_HERSHEY_COMPLEX,
-        fontScale = 3,
-        color = (150, 150, 150),
-        thickness = 3)
-
-
-
-    cv.imshow("Image", img)
-    cv.waitKey(1)

@@ -88,4 +88,6 @@ while True:
     img_bgr = cv.cvtColor(view, cv.COLOR_RGB2BGR)
 
     #Display image, clear cell every 0.5 seconds
+    pygame.display.update()
     cv.imshow("Pong!", img_bgr)
+
