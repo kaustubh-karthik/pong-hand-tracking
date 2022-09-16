@@ -20,18 +20,18 @@ prev_time = 0
 
 
 pygame.init()
-screen_width = 1280
-screen_height = 960
+screen_width = 1960
+screen_height = 1600
 screen = pygame.display.set_mode((screen_width, screen_height))
 done = False
 
 def player_animation():
-    player.y += player_speed
-
     if player.top <= 0:
         player.top = 0
     if player.bottom >= screen_height:
         player.bottom = screen_height
+    
+
 
 # General setup
 #clock = pygame.time.Clock()
@@ -50,10 +50,9 @@ player = pygame.Rect(screen_width - 20, screen_height / 2 - 70, 10,140)
 opponent = pygame.Rect(10, screen_height / 2 - 70, 10,140)
 
 # Game Variables
-ball_speed_x = 7
-ball_speed_y = 7
-player_speed = 0
-
+ball_speed_x = 20
+ball_speed_y = 20
+opponent_speed = 15
 
 ##################################################################################
 
@@ -96,16 +95,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        """if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                player_speed -= 7
-            if event.key == pygame.K_DOWN:
-                player_speed += 7
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
-                player_speed += 7
-            if event.key == pygame.K_DOWN:
-                player_speed -= 7"""
+
 
     # Game Logic
 
