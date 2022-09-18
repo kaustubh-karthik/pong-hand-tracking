@@ -1,3 +1,4 @@
+
 import cv2 as cv
 import mediapipe as mp
 import time, pygame, sys
@@ -20,8 +21,8 @@ prev_time = 0
 
 
 pygame.init()
-screen_width = 1960
-screen_height = 1600
+screen_width = 1080
+screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
 done = False
 
@@ -50,8 +51,8 @@ player = pygame.Rect(screen_width - 20, screen_height / 2 - 70, 10,140)
 opponent = pygame.Rect(10, screen_height / 2 - 70, 10,140)
 
 # Game Variables
-ball_speed_x = 20
-ball_speed_y = 20
+ball_speed_x = 13
+ball_speed_y = 13
 opponent_speed = 15
 
 ##################################################################################
@@ -66,8 +67,8 @@ while True:
     success, img = cap.read()
 
     rgb_img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    screen.fill(bg_color)
 
-    view = pygame.surfarray.array3d(screen)
 
     results = hands.process(rgb_img)
     # print(results.multi_hand_landmarks)
@@ -84,9 +85,8 @@ while True:
 
                 # print(id, ':', centre_x, centre_y)
 
-                cv.circle(img, (centre_x, centre_y), 25, (255, 0, 255))
+                pygame.draw.circle(screen, (255, 0, 255), (centre_x, centre_y), 5)
 
-            mp_draw.draw_landmarks(view, hand_lm, mp_hands.HAND_CONNECTIONS)
             index_finger = hand_lm.landmark[8]
             player.y = index_finger.y * screen_height
 
@@ -115,20 +115,11 @@ while True:
     player_animation()
 
     # Visuals
-    screen.fill(bg_color)
     pygame.draw.rect(screen, light_grey, player)
     pygame.draw.rect(screen, light_grey, opponent)
     pygame.draw.ellipse(screen, light_grey, ball)
     pygame.draw.aaline(screen, light_grey, (screen_width / 2, 0),(screen_width / 2, screen_height))
 
-    #convert image so it can be displayed in OpenCV
-    #view = pygame.surfarray.array3d(screen)
 
-    #  convert from (width, height, channel) to (height, width, channel)
-    view = view.transpose([1, 0, 2])
+    pygame.display.flip()
 
-    #  convert from rgb to bgr
-    img_bgr = cv.cvtColor(view, cv.COLOR_RGB2BGR)
-
-    #Display image, clear cell every 0.5 seconds
-    cv.imshow("Pong!", img_bgr)
