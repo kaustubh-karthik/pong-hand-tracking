@@ -28,9 +28,6 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
-                
 
     if ball.top <= 0 or ball.bottom >= screen_height:
         ball_speed_y *= -1
